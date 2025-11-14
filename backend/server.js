@@ -57,6 +57,93 @@ app.get('/recipes/:id', async (req, res) => {
 	}
 });
 
+// POST routes
+app.post('/recipes', async (req, res) => {
+  try {
+    const { user_id, title, description, instructions, servings, prep_minutes } = req.body;
+
+    const result = await pool.query(
+      `INSERT INTO recipes (user_id, title, description, instructions, servings, prep_minutes)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING *`,
+      [user_id, title, description, instructions, servings, prep_minutes]
+    );
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error inserting recipe into db:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// DELETE routes
+// delete all recipes - for test only
+app.delete('/recipes', async (req, res) => {
+  try {
+	await pool.query('DELETE FROM recipes');
+	res.json({ message: 'All recipes deleted' });
+  } catch (error) {
+	console.error('Error deleting recipes from db:', error);
+	res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Account creation routes
+
+app.post('/create-account', async (req, res) => {
+	const { name, email, password, matching_password } = req.body;
+	// two forms - password and repeated password to make sure they match
+	if (password !== matching_password) {
+		console.log("Passwords do not match.");
+		return res.status(400).json({ error: 'Passwords do not match' });
+	}
+
+	try {
+		const result = await pool.query(
+			"INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *",
+			[name, email, password]
+		);
+		res.json(result.rows[0]);
+		console.log("Account created successfully");
+	} catch (error) {
+		console.log("Unable to create account");
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+});
+
+
+
+
+
+
+
+
+// Authentication routes
+app.post('/login', async (req, res) => {
+	const { email, password } = req.body;
+
+	try {
+		const result = await pool.query(
+			"SELECT * FROM users WHERE email = $1 AND password = $2", [email, password]
+		);
+
+		if (result.rows.length === 0) {
+			console.log("No matching email and password");
+			return res.status(401).json({ error: 'Invalid email or password' });
+		} else {
+			console.log("User exists");
+			return res.json(result.rows[0]);
+		}
+
+	} catch (error) {
+		console.error("Error on login post route", error);
+		res.status(500).json({ error: 'Internal Server Error' });
+	}
+});
+
+
+
+
 //////////////////////////////////////////////////
 
 

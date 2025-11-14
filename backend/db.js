@@ -5,7 +5,7 @@ import { Pool } from 'pg';
 export const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
-  database: 'Recipe Database',
+  database: 'RecipeDB',
   password: '1234',
   port: 5432, // this is PostgreSQL's port
 });

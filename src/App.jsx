@@ -1,24 +1,26 @@
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import Recipes from './pages/Recipes'
+import Login from './pages/Login'
+import CreateAccount from './pages/CreateAccount'
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 
-function App() {
 
+export function App() {
   return (
-    <div>
-      <h1>Recipe Sharing Website</h1>
-      <form>
-        <label>
-          Recipe ID:
-          <input type="text" name="id" />
-        </label>
-      </form>
-      <form>
-        <label>
-          Recipe Name:
-          <input type="text" name="name" />
-        </label>
-      </form>
-    </div>
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/recipes' element={<Recipes />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/create-account' element={<CreateAccount />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
+
+
 
 export default App
