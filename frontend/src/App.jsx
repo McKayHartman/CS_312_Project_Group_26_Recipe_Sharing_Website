@@ -17,6 +17,7 @@ export function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/create-account' element={<CreateAccount />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }

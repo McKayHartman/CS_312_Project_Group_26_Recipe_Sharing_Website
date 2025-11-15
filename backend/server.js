@@ -9,10 +9,16 @@ import express from 'express';
 import { pool } from './db.js';
 import cors from 'cors';
 
+import path from 'path';
+const __dirname = path.resolve();
+
 
 // Express app setup
 const app = express();
 const PORT = 3000; // Express server port
+
+
+
 
 // Middleware
 app.use(cors());
@@ -28,7 +34,7 @@ app.get('/', async (req, res) => {
 
 
 // Returns all recipes from the database
-app.get('/recipes', async (req, res) => {
+app.get('/api/recipes', async (req, res) => {
   try {
 	const result = await pool.query('SELECT * FROM recipes');
 	res.json(result.rows);
@@ -39,7 +45,7 @@ app.get('/recipes', async (req, res) => {
 });
 
 // Returns a specific recipe by ID
-app.get('/recipes/:id', async (req, res) => {
+app.get('/api/recipes/:id', async (req, res) => {
 	try{
 		const id = parseInt(req.params.id);
 
@@ -58,7 +64,7 @@ app.get('/recipes/:id', async (req, res) => {
 });
 
 // POST routes
-app.post('/recipes', async (req, res) => {
+app.post('/api/recipes', async (req, res) => {
   try {
     const { user_id, title, description, instructions, servings, prep_minutes } = req.body;
 
@@ -78,7 +84,7 @@ app.post('/recipes', async (req, res) => {
 
 // DELETE routes
 // delete all recipes - for test only
-app.delete('/recipes', async (req, res) => {
+app.delete('/api/recipes', async (req, res) => {
   try {
 	await pool.query('DELETE FROM recipes');
 	res.json({ message: 'All recipes deleted' });
@@ -90,7 +96,7 @@ app.delete('/recipes', async (req, res) => {
 
 // Account creation routes
 
-app.post('/create-account', async (req, res) => {
+app.post('/api/create-account', async (req, res) => {
 	const { name, email, password, matching_password } = req.body;
 	// two forms - password and repeated password to make sure they match
 	if (password !== matching_password) {
@@ -119,7 +125,7 @@ app.post('/create-account', async (req, res) => {
 
 
 // Authentication routes
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
 	const { email, password } = req.body;
 
 	try {
