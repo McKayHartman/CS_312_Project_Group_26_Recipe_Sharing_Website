@@ -44,7 +44,7 @@ app.get('/api/recipes', async (req, res) => {
   }
 });
 
-// Returns a specific recipe by ID
+// Returns a specific recipe by ***recipe_id***
 app.get('/api/recipes/:id', async (req, res) => {
 	try{
 		const id = parseInt(req.params.id);
@@ -59,6 +59,25 @@ app.get('/api/recipes/:id', async (req, res) => {
 		res.json(result.rows[0]);
 	} catch (error) {
 		console.error('Error fetching recipe from db:', error);
+		res.status(500).json({error: 'Internal Server Error'});
+	}
+});
+
+// Returns a specific recipe by ***user_id***
+app.get('/api/users/:user_id/recipes', async (req, res) => {
+	try{
+		const id = parseInt(req.params.user_id);
+
+		// Look through the database for row with corresponding user_id
+		const result = await pool.query('SELECT * FROM recipes WHERE user_id = $1', [id]);
+		// if no results found throw error code 404
+		if (result.rows.length === 0) {
+			return res.json([]); // returns empty array
+		}
+		// return the found rows
+		res.json(result.rows);
+	} catch (error) {
+		console.error('Error fetching recipes from db:', error);
 		res.status(500).json({error: 'Internal Server Error'});
 	}
 });

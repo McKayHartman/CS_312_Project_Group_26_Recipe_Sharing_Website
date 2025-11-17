@@ -23,10 +23,12 @@ export default function Navbar() {
 		{/* Navigation links */}
 		<a href="/" className="mr-4 hover:underline">Home</a>
 		<a href="/recipes" className="mr-4 hover:underline">Recipes</a>
-		<a href="/login" className="mr-4 hover:underline">Login</a>
-		<a href="/create-account" className="hover:underline">Create Account</a>
+		{!loggedInUser && <a href="/login" className="mr-4 hover:underline">Login</a>}
+		{!loggedInUser && <a href="/create-account" className="mr-4 hover:underline">Create Account</a>}
+		{loggedInUser && <a href="/my-recipes" className='mr-4 hover:underline'> My Recipes</a>}
+		{loggedInUser && <button onClick={handleLogout}>Logout</button>}
 	  </div>
-	  <button onClick={handleLogout}>Logout</button>
+	  
     </nav>
   );
 }

@@ -1,15 +1,17 @@
 import React from "react"
-import { useState } from "react"
+import { useState, useContext } from "react"
 import { useEffect } from "react"
 import RecipeCard from "../components/RecipeCard"
 import axios from "axios"
 import CreateRecipe from "./CreateRecipe"
 import { Link } from "react-router-dom"
+import { UserContext } from '../context/UserContext'
 
 
 
 export default function Recipes() {
 	const [recipes, setRecipes] = useState([]);
+	const { loggedInUser } = useContext(UserContext);
 
 	// Gets all recipes from the DB
 	async function fetchAllRecipes() {
@@ -30,8 +32,8 @@ export default function Recipes() {
 			<button onClick={fetchAllRecipes}>Get All Recipes</button>
 
 			<br></br>
-			{/* Link to create recipe page */}
-			<Link className="text-xl font-bold hover:underline" to="/create-recipe" element={<CreateRecipe />}>Create a New Recipe</Link>
+			{/* Link to create recipe page only renders when user is logged in*/}
+			{loggedInUser && <Link className="text-xl font-bold hover:underline" to="/create-recipe" element={<CreateRecipe />}>Create a New Recipe</Link>}
 
 			{/* render ul of recipe cards here */}
 			<ul>

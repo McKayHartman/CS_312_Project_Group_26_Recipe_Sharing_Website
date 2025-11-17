@@ -1,10 +1,13 @@
 // Page where users can create a new recipe
 
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import axios from "axios"
 import Input from "../components/Input"
+import { UserContext } from '../context/UserContext'
 
 export default function CreateRecipe() {
+	const { loggedInUser } = useContext(UserContext);
+
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [instructions, setInstructions] = useState("");
@@ -19,7 +22,7 @@ export default function CreateRecipe() {
 		e.preventDefault();
 
 		const recipe = {
-			user_id: 1, // this needs to be updated to be supplied from user data
+			user_id: loggedInUser, // this needs to be updated to be supplied from user data
 			title,
 			description,
 			instructions,
