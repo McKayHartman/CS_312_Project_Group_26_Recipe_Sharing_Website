@@ -1,5 +1,7 @@
 export default function Footer() {
 	return(
-		<h3>Footer</h3>
+		<footer className="bg-gray-800 text-white text-center p-4 mt-8">
+			<p>&copy; 2025 Recipe Sharing Website</p>
+		</footer>
 	)
 }

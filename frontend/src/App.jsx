@@ -5,19 +5,29 @@ import Login from './pages/Login'
 import CreateAccount from './pages/CreateAccount'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import CreateRecipe from './pages/CreateRecipe'
 
 
 export function App() {
+
   return (
     <BrowserRouter>
+      <div className="flex flex-col min-h-screen">
+      <div className="flex-grow">
       <Navbar />
+
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/recipes' element={<Recipes />} />
         <Route path='/login' element={<Login />} />
         <Route path='/create-account' element={<CreateAccount />} />
+        <Route path="/create-recipe" element={<CreateRecipe />} />
       </Routes>
+      
+      </div>
+
       <Footer />
+      </div>
     </BrowserRouter>
   )
 }

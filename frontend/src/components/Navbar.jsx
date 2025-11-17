@@ -1,6 +1,23 @@
+import React from 'react'
+import { useContext } from 'react'
+import { UserContext } from '../context/UserContext'
+import { useNavigate } from 'react-router-dom'
+
+
+
 export default function Navbar() {
+	const { loggedInUser, setLoggedInUser } = useContext(UserContext);
+	const navigate = useNavigate();
+
+	// function to set the logged in user as null and navigate back to the login screen
+	function handleLogout(){
+		// set loggedInUser as null
+		setLoggedInUser(null);
+		// route back to login
+		navigate('/login');
+	}
   return (
-    <nav className="bg-blue-600 text-white p-4">
+    <nav className="bg-gray-800 text-white p-4">
       <h1 className="text-xl font-bold">Recipe Website</h1>
 	  <div>
 		{/* Navigation links */}
@@ -9,6 +26,7 @@ export default function Navbar() {
 		<a href="/login" className="mr-4 hover:underline">Login</a>
 		<a href="/create-account" className="hover:underline">Create Account</a>
 	  </div>
+	  <button onClick={handleLogout}>Logout</button>
     </nav>
   );
 }

@@ -97,17 +97,29 @@ app.delete('/api/recipes', async (req, res) => {
 // Account creation routes
 
 app.post('/api/create-account', async (req, res) => {
-	const { name, email, password, matching_password } = req.body;
-	// two forms - password and repeated password to make sure they match
-	if (password !== matching_password) {
-		console.log("Passwords do not match.");
-		return res.status(400).json({ error: 'Passwords do not match' });
-	}
-
+	const { username, email, password,} = req.body;
 	try {
+		// check if user with email already exists
+		const checkUser = await pool.query(
+			"SELECT * FROM users WHERE email = $1",
+			[email]
+		);
+		if(checkUser.rows.length > 0) {
+			return res.status(409).json({error: "Email already in use"});
+		}
+		// check if username already exists
+		const checkName = await pool.query(
+			"SELECT * FROM users WHERE email = $1",
+			[username]
+		);
+		if(checkName.rows.length > 0) {
+			return res.status(409).json({error: "Username already in use"});
+		}
+
+
 		const result = await pool.query(
 			"INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *",
-			[name, email, password]
+			[username, email, password]
 		);
 		res.json(result.rows[0]);
 		console.log("Account created successfully");
@@ -138,7 +150,7 @@ app.post('/api/login', async (req, res) => {
 			return res.status(401).json({ error: 'Invalid email or password' });
 		} else {
 			console.log("User exists");
-			return res.json(result.rows[0]);
+			return res.status(200).json(result.rows[0]);
 		}
 
 	} catch (error) {
@@ -147,6 +159,24 @@ app.post('/api/login', async (req, res) => {
 	}
 });
 
+app.get('/api/users/:id', async (req, res) => {
+	try {
+		const id = parseInt(req.params.id);
+
+		// look for row w/ corresponding id
+		const result = await pool.query('SELECT * FROM users WHERE user_id = $1', [id]);
+
+		// if there is no results throw error 404
+		if(!result.rows[0]) {
+			return res.status(404).json({error: "User with requested id not found"});
+		}
+		// return the found row(s)
+		res.json(result.rows[0]);
+	} catch (error) {
+		console.error('Error fetching user from db', error);
+		res.status(500).json({error: 'Internal Error'});
+	}
+});
 
 
 

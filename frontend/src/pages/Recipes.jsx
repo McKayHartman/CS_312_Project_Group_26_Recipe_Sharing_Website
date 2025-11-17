@@ -3,6 +3,8 @@ import { useState } from "react"
 import { useEffect } from "react"
 import RecipeCard from "../components/RecipeCard"
 import axios from "axios"
+import CreateRecipe from "./CreateRecipe"
+import { Link } from "react-router-dom"
 
 
 
@@ -23,8 +25,14 @@ export default function Recipes() {
 
 	return (
 		<div>
-			<h1>Recipes Page</h1>
+			<h1 className="text-3xl">Recipes Page</h1>
+
 			<button onClick={fetchAllRecipes}>Get All Recipes</button>
+
+			<br></br>
+			{/* Link to create recipe page */}
+			<Link className="text-xl font-bold hover:underline" to="/create-recipe" element={<CreateRecipe />}>Create a New Recipe</Link>
+
 			{/* render ul of recipe cards here */}
 			<ul>
 				{recipes.map(recipe => (
