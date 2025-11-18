@@ -1,11 +1,12 @@
 import React, { useState } from "react"
 import axios from "axios"
 import Input from "../components/Input"
+import { useNavigate } from 'react-router-dom' 
 
 
 
 export default function CreateAccount() {
-
+	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -31,6 +32,8 @@ export default function CreateAccount() {
 				console.log("creating account", account);
 				const response = await axios.post('api/create-account', account);
 				console.log("account created");
+				navigate('/login')
+
 				// Return to login page
 			} catch (error) {
 				if (error.response) {

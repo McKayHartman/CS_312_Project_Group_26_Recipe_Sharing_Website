@@ -48,7 +48,7 @@ export default function Login() {
 	}
 
 	function handleLogin(user_id){
-		// store user_id locally
+		// store user_id inside of context
 		setLoggedInUser(user_id);
 		console.log("User logged in to page using id: ", user_id);
 		navigate("/"); // route the user to the home page
