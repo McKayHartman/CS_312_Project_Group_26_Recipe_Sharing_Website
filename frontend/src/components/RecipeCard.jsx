@@ -1,8 +1,12 @@
 // Recipe card is the default display component for individual recipes
 import React from 'react'
 import './RecipeCard.css'
+import CommentsSection from './CommentsSection'
+import { useState } from 'react'
 
 export default function RecipeCard({ recipe }) {
+	const [showComments, setShowComments] = useState(false);
+
 	return (
 		<div className="recipe-card">
 			<h2>{recipe.title}</h2>
@@ -11,6 +15,16 @@ export default function RecipeCard({ recipe }) {
 			<p>Prep Time: {recipe.prep_minutes} minutes</p>
 			<h3>Instructions:</h3>
 			<p>{recipe.instructions}</p>
+			{/* Toggle comments section */}
+			{!showComments ? (
+				<button onClick={() => setShowComments(true)}>Show Comments</button>
+			) : (
+				<button onClick={() => setShowComments(false)}>Hide Comments</button>
+			)}
+			{showComments &&
+				<CommentsSection />
+			}
+			
 		</div>
 	)
 }

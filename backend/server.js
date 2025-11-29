@@ -127,14 +127,14 @@ app.post('/api/create-account', async (req, res) => {
 			return res.status(409).json({error: "Email already in use"});
 		}
 		// check if username already exists
-		const checkName = await pool.query(
-			"SELECT * FROM users WHERE email = $1",
-			[username]
-		);
-		if(checkName.rows.length > 0) {
-			return res.status(409).json({error: "Username already in use"});
-		}
-
+		// check if username already exists
+				const checkName = await pool.query(
+					"SELECT * FROM users WHERE name = $1",
+					[username]
+				);
+				if(checkName.rows.length > 0) {
+					return res.status(409).json({error: "Username already in use"});
+				}
 
 		const result = await pool.query(
 			"INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *",
@@ -197,8 +197,80 @@ app.get('/api/users/:id', async (req, res) => {
 	}
 });
 
+// Comments section routes
+function buildCommentTree(rows) {
+  const map = {};
+  const roots = [];
 
+  rows.forEach(row => {
+    map[row.comment_id] = {
+      ...row,
+      replies: []
+    };
+  });
 
+  rows.forEach(row => {
+    if (row.parent_comment_id === null) {
+      roots.push(map[row.comment_id]);
+    } else {
+      if (map[row.parent_comment_id]) {
+        map[row.parent_comment_id].replies.push(map[row.comment_id]);
+      } else {
+        roots.push(map[row.comment_id]);
+      }
+    }
+  });
+
+  return roots;
+}
+
+// Get all comments for a recipe
+app.get('/api/comments/:recipeId', async (req, res) => {
+  const { recipeId } = req.params;
+
+  try {
+    const result = await pool.query(
+      `SELECT c.comment_id,
+              c.recipe_id,
+              c.parent_comment_id,
+              c.body,
+              c.user_id,
+              u.name AS user_name,
+              c.created_at
+       FROM comments c
+       JOIN users u ON c.user_id = u.user_id
+       WHERE c.recipe_id = $1
+       ORDER BY c.created_at ASC`,
+      [recipeId]
+    );
+
+    res.json(buildCommentTree(result.rows));
+
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    res.status(500).json({ error: "Error fetching comments" });
+  }
+});
+
+// Post a comment
+app.post("/api/comments", async (req, res) => {
+  const { recipe_id, parent_comment_id, body, user_id } = req.body;
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO comments (recipe_id, parent_comment_id, body, user_id)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [recipe_id, parent_comment_id, body, user_id]
+    );
+
+    res.json(result.rows[0]); // return the new comment
+
+  } catch (error) {
+    console.error("Error posting comment", error);
+    res.status(500).json({ error: "Error posting comment" });
+  }
+});
 //////////////////////////////////////////////////
 
 
