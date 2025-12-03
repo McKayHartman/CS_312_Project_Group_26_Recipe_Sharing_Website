@@ -7,6 +7,7 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import CreateRecipe from './pages/CreateRecipe'
 import MyRecipes from './pages/MyRecipes'
+import MyAccount from './pages/MyAccount'
 
 
 export function App() {
@@ -24,6 +25,7 @@ export function App() {
         <Route path='/create-account' element={<CreateAccount />} />
         <Route path="/create-recipe" element={<CreateRecipe />} />
         <Route path='/my-recipes' element={<MyRecipes />} />
+        <Route path='/my-account' element={<MyAccount />} />
       </Routes>
       
       </div>

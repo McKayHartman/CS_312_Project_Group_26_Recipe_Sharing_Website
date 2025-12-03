@@ -4,9 +4,25 @@ import './RecipeCard.css'
 import CommentsSection from './CommentsSection'
 import { useState } from 'react'
 import GlobalRating from './GlobalRating'
+import { useContext } from 'react'
+import { UserContext } from '../context/UserContext'
+import axios from 'axios'
 
-export default function RecipeCard({ recipe }) {
+export default function RecipeCard({ recipe, onDelete }) {
 	const [showComments, setShowComments] = useState(false);
+	const { loggedInUser } = useContext(UserContext);
+	console.log(loggedInUser, recipe.user_id)
+
+	// delete recipe from the database
+	async function handleDeleteRecipe() {
+		try {
+			const response = await axios.delete(`/api/recipes/${recipe.recipe_id}`);
+
+			if(onDelete) onDelete();
+		} catch (error) {
+			console.error("Failed to delete recipe", error);
+		}
+	}
 
 	return (
 		<div className="recipe-card flex gap-4">
@@ -42,6 +58,11 @@ export default function RecipeCard({ recipe }) {
 				<button onClick={() => {setShowComments(true);}}>Show Comments</button>
 			) : (
 				<button onClick={() => {setShowComments(false);}}>Hide Comments</button>
+			)}
+			{loggedInUser == recipe.user_id && (
+				<button className='text-red-600' onClick={handleDeleteRecipe}>
+					Delete Recipe
+				</button>
 			)}
 			{/* Comments Section */}
 			{showComments &&

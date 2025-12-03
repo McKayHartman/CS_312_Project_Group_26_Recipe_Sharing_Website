@@ -134,7 +134,21 @@ app.post('/api/recipes', upload.single('image'), async (req, res) => {
 // Serve images from backend/assets folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// DELETE routes
+// delete recipe by id
+app.delete('/api/recipes/:recipe_id', async (req, res) => {
+	const { recipe_id } = req.params;
+	try {
+		await pool.query(
+			`DELETE FROM recipes
+			WHERE recipe_id = $1`,
+			[recipe_id]
+		);
+		res.json({ message: "recipe deleted "});
+	} catch (error) {
+		console.error("Error deleting recipe by id");
+		res.status(500).json({ error: 'Server error deleting recipe by id'});
+	}
+})
 // delete all recipes - for test only
 app.delete('/api/recipes', async (req, res) => {
   try {

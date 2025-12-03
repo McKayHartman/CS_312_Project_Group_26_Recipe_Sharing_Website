@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        marquee: 'marquee 30s linear infinite', //change the seconds value to adjust speed
+        marquee: 'marquee 40s linear infinite', //change the seconds value to adjust speed
       },
       keyframes: {
         marquee: {

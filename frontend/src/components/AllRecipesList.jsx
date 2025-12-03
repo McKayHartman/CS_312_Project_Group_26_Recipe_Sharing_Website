@@ -28,7 +28,7 @@ export default function AllRecipesList(){
 			<ul>
 				{recipes.map(recipe => (
 					<li key={recipe.recipe_id}>
-						<RecipeCard recipe={recipe} />
+						<RecipeCard recipe={recipe} onDelete={fetchAllRecipes}/>
 					</li>
 				))}
 			</ul>
