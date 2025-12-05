@@ -200,8 +200,22 @@ app.post('/api/create-account', async (req, res) => {
 	}
 });
 
+// Search routes
+app.get("/api/recipes", async (req, res) => {
+    const search = req.query.search || "";
+    try {
+        const result = await pool.query(
+            `SELECT * FROM recipes
+             WHERE LOWER(title) LIKE LOWER($1)`,
+            [`%${search}%`]
+        );
 
-
+        res.json(result.rows);
+    } catch (error) {
+        console.error("Failed to search", error);
+        res.status(500).json({ error: "Server failed search request" });
+    }
+});
 
 
 
