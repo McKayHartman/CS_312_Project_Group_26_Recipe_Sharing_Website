@@ -26,7 +26,7 @@ export default function RecipeCard({ recipe, onDelete }) {
 	}
 
 	return (
-		<Link to={`/recipes/${recipe.recipe_id}`} className='block'> 
+		
 			<div className="recipe-card flex gap-4 hover:shadow-lg cursor-pointer">
 				<div className='flex-shrink-0'>
 					{recipe.image_url && (
@@ -39,7 +39,9 @@ export default function RecipeCard({ recipe, onDelete }) {
 				</div>
 
 				<div className="flex-1">
+					<Link to={`/recipes/${recipe.recipe_id}`} className='block'> 
 					<h2 className='text-xl font-bold'>{recipe.title}</h2>
+					</Link>
 					<p>{recipe.description}</p>
 					<p>Servings: {recipe.servings}</p>
 					<p>Prep Time: {recipe.prep_minutes} minutes</p>
@@ -77,6 +79,6 @@ export default function RecipeCard({ recipe, onDelete }) {
 				
 				
 			</div>
-		</Link>
+	
 	)
 }
